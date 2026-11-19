@@ -1,0 +1,85 @@
+import random
+import discord
+
+from discord.ext import commands
+from password_gen import generate_password
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix = "!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"jesteś zalogowany jako {bot.user.name}")
+
+@bot.command()
+async def pomysł(ctx):
+    ideas = [
+        "Zrób własne świeczki z wosku pszczelego.",
+        "Stwórz rankę na zdjęcia z patyczków od lodów.",
+        "Wykonaj biżuterię z koralików i drutu.",
+        "Zrób ozdobne doniczki z puszek po konserwach.",
+        "Stwórz obraz z wykorzystaniem techniki decoupage"
+    ]
+
+    idea = random.choice(ideas)
+    await ctx.send(f"💡 Pomysł dla ciebie to: {idea}")
+
+@bot.command()
+async def kosz(ctx, *, item):
+    kosze = {
+        'papier': ['gazeta', 'karton', 'książka', 'ulotka', 'notatnik'],
+        'plastik': ['plastikowa butelka', 'torebka', 'opakowanie po jogurcie'],
+        'szkło': ['słoik', 'szklana butelka', 'szklanka'],
+        'metal': ['puszka', 'folia aluminiowa', 'opakowanie po konserwie'],
+        'bio': ['resztki jedzenia', 'skórki owoców', 'liście', 'gałęzie'],
+    }
+
+    for kosz, items in kosze.items():
+        if item in items:
+            await ctx.send(f" Przedmiot '{item}' należy wyrzucić do kosza na {kosz}.")
+            return
+
+    await ctx.send(f" Nie znaleziono informacji o przedmiocie '{item}'.")
+
+@bot.command()
+async def czas(ctx, *, item):
+    decomposition_times = {
+        'butelka plastikowa': '450 lat',
+        'puszka aluminiowa': '200 lat',
+        'szklana butelka': '1 milion lat',
+        'papier': '2-6 tygodni',
+        'karton': '2 miesiące',
+        'skórki owoców': '2-5 tygodni',
+        'resztki jedzenia': '1-2 tygodnie'
+    }
+
+    if item in decomposition_times:
+        await ctx.send(
+            f" Przedmiot '{item}' rozkłada się w czasie: "
+            f"{decomposition_times[item.lower()]}.")
+    else:
+        await ctx.send(f" Nie znaleziono informacji o przedmiocie '{item}'.")
+
+@bot.command()
+async def where(ctx, *, item):
+    koszekolor = {
+        'Niebiskiego pojemnika (papier)': ['gazeta', 'karton', 'książka', 'ulotka', 'notatnik'],
+        'Żółtego pojemnika (plastik)': ['plastikowa butelka', 'torebka', 'opakowanie po jogurcie'],
+        'Zielonego pojemnika (szkło)': ['słoik', 'szklana butelka', 'szklanka'],
+        'Czerwonego pojemnika (metal)': ['puszka', 'folia aluminiowa', 'opakowanie po konserwie'],
+        'Brązowego pojemnika (bio)': ['resztki jedzenia', 'skórki owoców', 'liście', 'gałęzie'],
+    }
+
+    for where, items in koszekolor.items():
+        if item in items:
+            await ctx.send(f" Przedmiot '{item}' należy wyrzucić do: {where}.")
+            return
+
+    await ctx.send(f" Nie znaleziono informacji o przedmiocie '{item}'.")
+
+
+
+
+bot.run("###########################################################")
